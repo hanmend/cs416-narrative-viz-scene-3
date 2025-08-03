@@ -28,105 +28,97 @@ async function init() {
   function updateChart(selectedFilter) {
     if (selectedFilter === 'All') {
         // If 'All' is selected, show all data
-        d3.select("svg").selectAll("circle").data(data).exit().remove();
-        d3.select("svg").selectAll("circle")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("cx", d => cx(d.AverageCityMPG))
-            .attr("cy", d => cy(d.AverageHighwayMPG))
-            .attr("r", d => (parseInt(d.EngineCylinders) + 2))
+        d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(50,50)")
+          .selectAll("circle")
+          .data(data)
+          .enter()
+          .append("circle")
+            .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
+            .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
+            .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
             .attr("stroke", "black")
-            .attr("fill", d => color[d.Fuel])
-            .on("mouseover", function(event, d) {
-                d3.select(this)
-                    .attr("stroke", "black")
-                    .attr("stroke-width", 2);
-                d3.select("svg").append("text")
-                    .attr("class", "tooltip")
-                    .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
-                    .attr("y", cy(d.AverageHighwayMPG) + 7)
-                    .attr("font-size", "10px")
-                    .text(d.Make + ", Cty " + d.AverageCityMPG + "/Hw " + d.AverageHighwayMPG);
+            .attr("fill", function(d,i) { return color[d.Fuel]; })
+            .on("mouseover", function(event, d) { 
+              d3.select(this)
+                .attr("stroke", "black")
+                .attr("stroke-width", 2); 
+              d3.select("svg").append("text")
+                .attr("class", "tooltip")
+                .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
+                .attr("y", cy(d.AverageHighwayMPG)+7)
+                .attr("font-size", "10px")
+                .attr("text-anchor", "middle")
+                .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
             })
-            .on("mouseout", function(event, d) {
-                d3.select(this)
-                    .attr("stroke-width", 1);
-                d3.select(".tooltip").remove();
+            .on("mouseout", function(event, d) { 
+              d3.select(this)
+                .attr("stroke-width", 1); 
+              d3.select(".tooltip").remove();
             });
+        d3.select("svg").append("g")
+          .attr("transform", "translate(50,50)")
+          .call(
+            d3.axisLeft(cy)
+            .tickValues([10,20,50,100])
+            .tickFormat(d3.format("~s"))
+          );
+        d3.select("svg").append("g")
+          .attr("transform", "translate(50,350)")
+          .call(
+            d3.axisBottom(cx)
+            .tickValues([10,20,50,100])
+            .tickFormat(d3.format("~s"))
+          );
         return;
     }
     // If a specific make is selected, filter the data
     d3.select("svg").selectAll("circle").remove(); // Clear existing circles
-    d3.select("svg").selectAll("circle")
-        .data(data.filter(d => d.Make === selectedFilter))
-        .enter()
-        .append("circle")
-        .attr("cx", d => cx(d.AverageCityMPG))
-        .attr("cy", d => cy(d.AverageHighwayMPG))
-        .attr("r", d => (parseInt(d.EngineCylinders) + 2))
-        .attr("stroke", "black")
-        .attr("fill", d => color[d.Fuel])
-        .on("mouseover", function(event, d) {
-            d3.select(this)
+    d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(50,50)")
+          .selectAll("circle")
+          .data(data.filter(d => d.Make === selectedFilter))
+          .enter()
+          .append("circle")
+            .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
+            .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
+            .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
+            .attr("stroke", "black")
+            .attr("fill", function(d,i) { return color[d.Fuel]; })
+            .on("mouseover", function(event, d) { 
+              d3.select(this)
                 .attr("stroke", "black")
-                .attr("stroke-width", 2);
-            d3.select("svg").append("text")
+                .attr("stroke-width", 2); 
+              d3.select("svg").append("text")
                 .attr("class", "tooltip")
                 .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
-                .attr("y", cy(d.AverageHighwayMPG) + 7)
+                .attr("y", cy(d.AverageHighwayMPG)+7)
                 .attr("font-size", "10px")
-                .text(d.Make + ", Cty " + d.AverageCityMPG + "/Hw " + d.AverageHighwayMPG);
-        })
-        .on("mouseout", function(event, d) {
-            d3.select(this)
-                .attr("stroke-width", 1);
-            d3.select(".tooltip").remove();
-        });
+                .attr("text-anchor", "middle")
+                .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
+            })
+            .on("mouseout", function(event, d) { 
+              d3.select(this)
+                .attr("stroke-width", 1); 
+              d3.select(".tooltip").remove();
+            });
+        d3.select("svg").append("g")
+          .attr("transform", "translate(50,50)")
+          .call(
+            d3.axisLeft(cy)
+            .tickValues([10,20,50,100])
+            .tickFormat(d3.format("~s"))
+          );
+        d3.select("svg").append("g")
+          .attr("transform", "translate(50,350)")
+          .call(
+            d3.axisBottom(cx)
+            .tickValues([10,20,50,100])
+            .tickFormat(d3.format("~s"))
+          );
   };
-  d3.select("svg")
-    .append("g")
-    .attr("transform", "translate(50,50)")
-    .selectAll("circle")
-    .data(data)
-    .enter()
-    .append("circle")
-      .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
-      .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
-      .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
-      .attr("stroke", "black")
-      .attr("fill", function(d,i) { return color[d.Fuel]; })
-      .on("mouseover", function(event, d) { 
-        d3.select(this)
-          .attr("stroke", "black")
-          .attr("stroke-width", 2); 
-        d3.select("svg").append("text")
-          .attr("class", "tooltip")
-          .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
-          .attr("y", cy(d.AverageHighwayMPG)+7)
-          .attr("font-size", "10px")
-          .attr("text-anchor", "middle")
-          .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
-      })
-      .on("mouseout", function(event, d) { 
-        d3.select(this)
-          .attr("stroke-width", 1); 
-        d3.select(".tooltip").remove();
-      });
-  d3.select("svg").append("g")
-    .attr("transform", "translate(50,50)")
-    .call(
-      d3.axisLeft(cy)
-      .tickValues([10,20,50,100])
-      .tickFormat(d3.format("~s"))
-    );
-  d3.select("svg").append("g")
-    .attr("transform", "translate(50,350)")
-    .call(
-      d3.axisBottom(cx)
-      .tickValues([10,20,50,100])
-      .tickFormat(d3.format("~s"))
-    );
   d3.select("#dataFilterDropdown")
     .selectAll("option")
     .data(make_options)
@@ -140,7 +132,7 @@ async function init() {
     });
   // Set default selection to 'Chevrolet'
   d3.select("#dataFilterDropdown").property("value", "All");
-  updateChart("All");
+  updateChart("All"); // Initial chart rendering with 'All' data
 }
 </script>
 </body>
