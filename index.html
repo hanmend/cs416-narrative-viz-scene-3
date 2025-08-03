@@ -40,13 +40,13 @@ d3.select("svg")
         .attr("stroke-width", 2); 
       d3.select("svg").append("text")
         .attr("class", "tooltip")
-        .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders) + 7)
-        .attr("y", cy(d.AverageHighwayMPG))
-        .attr("font-size", "9px")
+        .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders) + 2)
+        .attr("y", cy(d.AverageHighwayMPG)+7)
+        .attr("font-size", "10px")
         .text("Make: " + d.Make +
-              "\nCity MPG: " + d.AverageCityMPG +
-              "\nHighway MPG: " + d.AverageHighwayMPG +
-              "\nCylinders: " + d.EngineCylinders);
+              "| City: " + d.AverageCityMPG +
+              "| Highway: " + d.AverageHighwayMPG +
+              "| Cyl: " + d.EngineCylinders);
     })
     .on("mouseout", function(event, d) { 
       d3.select(this)
