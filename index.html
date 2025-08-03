@@ -106,7 +106,7 @@ async function init() {
           .attr("y", cy(d.AverageHighwayMPG)+7)
           .attr("font-size", "10px")
           .attr("text-anchor", "middle")
-          .text(d.Make + ", Cty " + d.AverageCityMPG + "/Hw " + d.AverageHighwayMPG);
+          .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
       })
       .on("mouseout", function(event, d) { 
         d3.select(this)
