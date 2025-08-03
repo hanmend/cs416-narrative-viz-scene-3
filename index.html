@@ -42,10 +42,11 @@ d3.select("svg")
         .attr("class", "tooltip")
         .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders) + 7)
         .attr("y", cy(d.AverageHighwayMPG))
+        .attr("font-size", "9px")
         .text("Make: " + d.Make +
-              " | City MPG: " + d.AverageCityMPG +
-              " | Highway MPG: " + d.AverageHighwayMPG +
-              " | Cylinders: " + d.EngineCylinders);
+              "\nCity MPG: " + d.AverageCityMPG +
+              "\nHighway MPG: " + d.AverageHighwayMPG +
+              "\nCylinders: " + d.EngineCylinders);
     })
     .on("mouseout", function(event, d) { 
       d3.select(this)
