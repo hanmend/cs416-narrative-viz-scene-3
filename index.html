@@ -33,7 +33,22 @@ d3.select("svg")
     .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
     .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
     .attr("stroke", "black")
-    .attr("fill", function(d,i) { return color[d.Fuel]; });
+    .attr("fill", function(d,i) { return color[d.Fuel]; })
+    .on("mouseover", function(event, d) { 
+      d3.select(this)
+        .attr("stroke", "black")
+        .attr("stroke-width", 2); 
+      svg.append("text")
+        .attr("class", "tooltip")
+        .attr("x", d.x + d.radius + 5)
+        .attr("y", d.y)
+        .text("City: "+d.AverageCityMPG+", Highway: "+d.AverageHighwayMPG);
+    })
+    .on("mouseout", function(event, d) { 
+      d3.select(this)
+        .attr("stroke-width", 1); 
+      d3.select(".tooltip").remove();
+    });
 d3.select("svg").append("g")
   .attr("transform", "translate(50,50)")
   .call(
