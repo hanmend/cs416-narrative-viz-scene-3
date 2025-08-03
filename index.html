@@ -6,6 +6,7 @@
 </head>
 <body onload='init()'>
 <h2>2017 Automobile Fuel Efficiency</h2>
+<p>Filter by car make:</p>
 <select id="dataFilterDropdown"></select>
 <svg width="400" height="400"></svg>
 <p>
@@ -15,66 +16,130 @@
 </p>
 <script>
 async function init() {
-const data = await d3.csv("https://flunky.github.io/cars2017.csv");
-const make_options = ['Acura', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet', 'Chrysler', 'Dodge', 'Ferrari', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti', 'Jaguar', 'Jeep', 'Kia', 'Lamborghini', 'Land Rover', 'Lexus', 'Lincoln', 'Lotus', 'Maserati', 'Mazda', 'McLaren Automotive', 'Mercedes-Benz', 'MINI', 'Mitsubishi', 'Nissan', 'Porsche', 'Ram', 'Rolls-Royce', 'Roush Performance', 'smart', 'Subaru', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo'];
-var cx = d3.scaleLog().base(10).domain([10,150]).range([0,300]);
-var cy = d3.scaleLog().base(10).domain([10,150]).range([300,0]);
-var color = {
-    "Electricity": "lightgreen", 
-    "Gasoline": "lightyellow", 
-    "Diesel": "blue"
-};
-d3.select("svg")
-  .append("g")
-  .attr("transform", "translate(50,50)")
-  .selectAll("circle")
-  .data(data)
-  .enter()
-  .append("circle")
-    .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
-    .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
-    .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
-    .attr("stroke", "black")
-    .attr("fill", function(d,i) { return color[d.Fuel]; })
-    .on("mouseover", function(event, d) { 
-      d3.select(this)
+  const data = await d3.csv("https://flunky.github.io/cars2017.csv");
+  const make_options = ['All', 'Acura', 'Alfa Romeo', 'Aston Martin', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet', 'Chrysler', 'Dodge', 'Ferrari', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti', 'Jaguar', 'Jeep', 'Kia', 'Lamborghini', 'Land Rover', 'Lexus', 'Lincoln', 'Lotus', 'Maserati', 'Mazda', 'McLaren Automotive', 'Mercedes-Benz', 'MINI', 'Mitsubishi', 'Nissan', 'Porsche', 'Ram', 'Rolls-Royce', 'Roush Performance', 'smart', 'Subaru', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo'];
+  var cx = d3.scaleLog().base(10).domain([10,150]).range([0,300]);
+  var cy = d3.scaleLog().base(10).domain([10,150]).range([300,0]);
+  var color = {
+      "Electricity": "lightgreen", 
+      "Gasoline": "lightyellow", 
+      "Diesel": "blue"
+  };
+  function updateChart(selectedFilter) {
+    if (selectedFilter === 'All') {
+        // If 'All' is selected, show all data
+        d3.select("svg").selectAll("circle").data(data).exit().remove();
+        d3.select("svg").selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => cx(d.AverageCityMPG))
+            .attr("cy", d => cy(d.AverageHighwayMPG))
+            .attr("r", d => (parseInt(d.EngineCylinders) + 2))
+            .attr("stroke", "black")
+            .attr("fill", d => color[d.Fuel])
+            .on("mouseover", function(event, d) {
+                d3.select(this)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 2);
+                d3.select("svg").append("text")
+                    .attr("class", "tooltip")
+                    .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
+                    .attr("y", cy(d.AverageHighwayMPG) + 7)
+                    .attr("font-size", "10px")
+                    .text(d.Make + ", Cty " + d.AverageCityMPG + "/Hw " + d.AverageHighwayMPG);
+            })
+            .on("mouseout", function(event, d) {
+                d3.select(this)
+                    .attr("stroke-width", 1);
+                d3.select(".tooltip").remove();
+            });
+        return;
+    }
+    // If a specific make is selected, filter the data
+    d3.select("svg").selectAll("circle").remove(); // Clear existing circles
+    d3.select("svg").selectAll("circle")
+        .data(data.filter(d => d.Make === selectedFilter))
+        .enter()
+        .append("circle")
+        .attr("cx", d => cx(d.AverageCityMPG))
+        .attr("cy", d => cy(d.AverageHighwayMPG))
+        .attr("r", d => (parseInt(d.EngineCylinders) + 2))
         .attr("stroke", "black")
-        .attr("stroke-width", 2); 
-      d3.select("svg").append("text")
-        .attr("class", "tooltip")
-        .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders) + 2)
-        .attr("y", cy(d.AverageHighwayMPG)+7)
-        .attr("font-size", "10px")
-        .text("Make: " + d.Make +
-              " | Cty: " + d.AverageCityMPG +
-              " | Hw: " + d.AverageHighwayMPG);
-    })
-    .on("mouseout", function(event, d) { 
-      d3.select(this)
-        .attr("stroke-width", 1); 
-      d3.select(".tooltip").remove();
+        .attr("fill", d => color[d.Fuel])
+        .on("mouseover", function(event, d) {
+            d3.select(this)
+                .attr("stroke", "black")
+                .attr("stroke-width", 2);
+            d3.select("svg").append("text")
+                .attr("class", "tooltip")
+                .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
+                .attr("y", cy(d.AverageHighwayMPG) + 7)
+                .attr("font-size", "10px")
+                .text(d.Make + ", Cty " + d.AverageCityMPG + "/Hw " + d.AverageHighwayMPG);
+        })
+        .on("mouseout", function(event, d) {
+            d3.select(this)
+                .attr("stroke-width", 1);
+            d3.select(".tooltip").remove();
+        });
+  };
+  d3.select("svg")
+    .append("g")
+    .attr("transform", "translate(50,50)")
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
+      .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
+      .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
+      .attr("stroke", "black")
+      .attr("fill", function(d,i) { return color[d.Fuel]; })
+      .on("mouseover", function(event, d) { 
+        d3.select(this)
+          .attr("stroke", "black")
+          .attr("stroke-width", 2); 
+        d3.select("svg").append("text")
+          .attr("class", "tooltip")
+          .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
+          .attr("y", cy(d.AverageHighwayMPG)+7)
+          .attr("font-size", "10px")
+          .text(d.Make + ", Cty " + d.AverageCityMPG + "/Hw " + d.AverageHighwayMPG);
+      })
+      .on("mouseout", function(event, d) { 
+        d3.select(this)
+          .attr("stroke-width", 1); 
+        d3.select(".tooltip").remove();
+      });
+  d3.select("svg").append("g")
+    .attr("transform", "translate(50,50)")
+    .call(
+      d3.axisLeft(cy)
+      .tickValues([10,20,50,100])
+      .tickFormat(d3.format("~s"))
+    );
+  d3.select("svg").append("g")
+    .attr("transform", "translate(50,350)")
+    .call(
+      d3.axisBottom(cx)
+      .tickValues([10,20,50,100])
+      .tickFormat(d3.format("~s"))
+    );
+  d3.select("#dataFilterDropdown")
+    .selectAll("option")
+    .data(make_options)
+    .enter()
+    .append("option")
+      .text(function(d) { return d; })
+    .attr("value", function(d) { return d; })
+    .on("change", function() {
+      var selectedFilter = d3.select(this).property("value");
+      updateChart(selectedFilter);
     });
-d3.select("svg").append("g")
-  .attr("transform", "translate(50,50)")
-  .call(
-    d3.axisLeft(cy)
-    .tickValues([10,20,50,100])
-    .tickFormat(d3.format("~s"))
-  );
-d3.select("svg").append("g")
-  .attr("transform", "translate(50,350)")
-  .call(
-    d3.axisBottom(cx)
-    .tickValues([10,20,50,100])
-    .tickFormat(d3.format("~s"))
-  );
-d3.select("#dataFilterDropdown")
-  .selectAll("option")
-  .data(make_options)
-  .enter()
-  .append("option")
-    .text(function(d) { return d; })
-    .attr("value", function(d) { return d; });
+  // Set default selection to 'Chevrolet'
+  d3.select("#dataFilterDropdown").property("value", "All");
+  updateChart("All");
 }
 </script>
 </body>
