@@ -72,7 +72,7 @@ async function init() {
             .tickFormat(d3.format("~s"))
           );
         return;
-    }
+    };
     // If a specific make is selected, filter the data
     d3.select("svg").selectAll("circle").remove(); // Clear existing circles
     d3.select("svg")
@@ -130,9 +130,8 @@ async function init() {
       var selectedFilter = d3.select(this).property("value");
       updateChart(selectedFilter);
     });
-  // Set default selection to 'Chevrolet'
   d3.select("#dataFilterDropdown").property("value", "All");
-  updateChart("All"); // Initial chart rendering with 'All' data
+  updateChart("All"); 
 }
 </script>
 </body>
