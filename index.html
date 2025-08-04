@@ -10,10 +10,11 @@
 <select id="dataFilterDropdown"></select>
 <svg width="400" height="400"></svg>
 <p>
-    EXPLORE BY MAKE<br> 
-    <br>TOOL TIPS<br>
-    <br>DEFAULT TO CHEVY
-</p>
+    Here, we can focus on one car make (Chevrolet). In this dataset, Chevrolet has cars using all three fuel types. <br> 
+    <br><br>
+    <br><b><i>Now, use the drop down to filter on different car makes and explore their vehicles' fuel efficiency.</i></b><br>
+    <b><i>You can also hover over each data point to see details on their Average Highway and City MPG.</i></b>
+  </p>
 <script>
 async function init() {
   const data = await d3.csv("https://flunky.github.io/cars2017.csv");
@@ -27,61 +28,17 @@ async function init() {
   };
   function updateChart(selectedFilter) {
     if (selectedFilter === 'All') {
-        // If 'All' is selected, show all data
-        d3.select("svg").selectAll("*").remove();
-        d3.select("svg")
-          .append("g")
-          .attr("transform", "translate(50,50)")
-          .selectAll("circle")
-          .data(data)
-          .enter()
-          .append("circle")
-            .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
-            .attr("cy", function(d,i) { return cy(d.AverageHighwayMPG); })
-            .attr("r", function(d,i) { return (parseInt(d.EngineCylinders)+2); })
-            .attr("stroke", "black")
-            .attr("fill", function(d,i) { return color[d.Fuel]; })
-            .on("mouseover", function(event, d) { 
-              d3.select(this)
-                .attr("stroke", "black")
-                .attr("stroke-width", 2); 
-              d3.select("svg").append("text")
-                .attr("class", "tooltip")
-                .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
-                .attr("y", cy(d.AverageHighwayMPG)+7)
-                .attr("font-size", "10px")
-                .attr("text-anchor", "middle")
-                .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
-            })
-            .on("mouseout", function(event, d) { 
-              d3.select(this)
-                .attr("stroke-width", 1); 
-              d3.select(".tooltip").remove();
-            });
-        d3.select("svg").append("g")
-          .attr("transform", "translate(50,50)")
-          .call(
-            d3.axisLeft(cy)
-            .tickValues([10,20,50,100])
-            .tickFormat(d3.format("~s"))
-          );
-        d3.select("svg").append("g")
-          .attr("transform", "translate(50,350)")
-          .call(
-            d3.axisBottom(cx)
-            .tickValues([10,20,50,100])
-            .tickFormat(d3.format("~s"))
-          );
-        return;
-    };
-    // If a specific make is selected, filter the data
+      filtered_data = data;
+    } else {
+      filtered_data = data.filter(d => d.Make === selectedFilter);
+    }
     // Clear existing elements
     d3.select("svg").selectAll("*").remove();
     d3.select("svg")
           .append("g")
           .attr("transform", "translate(50,50)")
           .selectAll("circle")
-          .data(data.filter(d => d.Make === selectedFilter))
+          .data(filtered_data)
           .enter()
           .append("circle")
             .attr("cx", function(d,i) { return cx(d.AverageCityMPG); })
@@ -96,9 +53,9 @@ async function init() {
               d3.select("svg").append("text")
                 .attr("class", "tooltip")
                 .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
-                .attr("y", cy(d.AverageHighwayMPG)+7)
+                .attr("y", cy(d.AverageHighwayMPG)+5)
                 .attr("font-size", "10px")
-                .attr("text-anchor", "middle")
+                // .attr("text-anchor", "middle")
                 .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
             })
             .on("mouseout", function(event, d) { 
@@ -127,13 +84,14 @@ async function init() {
     .enter()
     .append("option")
       .text(function(d) { return d; })
-    .attr("value", function(d) { return d; })
+      .attr("value", function(d) { return d; });
+  d3.select("#dataFilterDropdown")
     .on("change", function() {
       var selectedFilter = d3.select(this).property("value");
       updateChart(selectedFilter);
     });
-  d3.select("#dataFilterDropdown").property("value", "All");
-  updateChart("All"); 
+  d3.select("#dataFilterDropdown").property("value", "Chevrolet");
+  updateChart("Chevrolet"); 
 }
 </script>
 </body>
