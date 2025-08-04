@@ -52,7 +52,7 @@ async function init() {
                 .attr("stroke-width", 2); 
               d3.select("svg").append("text")
                 .attr("class", "tooltip")
-                .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders))
+                .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders)-2)
                 .attr("y", cy(d.AverageHighwayMPG)+5)
                 .attr("font-size", "10px")
                 // .attr("text-anchor", "middle")
