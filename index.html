@@ -28,6 +28,7 @@ async function init() {
   function updateChart(selectedFilter) {
     if (selectedFilter === 'All') {
         // If 'All' is selected, show all data
+        d3.select("svg").selectAll("*").remove();
         d3.select("svg")
           .append("g")
           .attr("transform", "translate(50,50)")
@@ -74,7 +75,8 @@ async function init() {
         return;
     };
     // If a specific make is selected, filter the data
-    d3.select("svg").selectAll("circle").remove(); // Clear existing circles
+    // Clear existing elements
+    d3.select("svg").selectAll("*").remove();
     d3.select("svg")
           .append("g")
           .attr("transform", "translate(50,50)")
