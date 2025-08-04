@@ -7,13 +7,7 @@
 <body onload='init()'>
 <h2>2017 Automobile Fuel Efficiency</h2>
 <select id="dataFilterDropdown"></select>
-<svg width="400" height="400">
-  <rect x="75" y="50" width="100" height="60" fill="darkgoldenrod" stroke="black"/>
-  <text x="80" y="62" fill="white" font-size="10" text-anchor="left">FUEL TYPES:</text>
-  <text x="80" y="77" fill="lightgreen" font-size="10" text-anchor="left">Electric = green</text>
-  <text x="80" y="89" fill="lightyellow" font-size="10" text-anchor="left">Gasoline = yellow</text>
-  <text x="80" y="101" fill="blue" font-size="10" text-anchor="left">Diesel = blue</text>
-</svg>
+<svg width="400" height="400"></svg>
 <p>
     Here, we can focus on one car make (Chevrolet). In this dataset, Chevrolet has cars using all three fuel types.<br> 
     The Chevrolet cars follow the same general pattern and trend which we saw in the whole dataset, with gasoline usually sitting lower, diesel in the middle, and electric as a huge outlier with vastly higher efficiency.<br>
@@ -82,6 +76,43 @@ async function init() {
             .tickFormat(d3.format("~s"))
           );
   };
+  d3.select("svg")
+    .append("g")
+    .append("rect")
+      .attr("x", 75)
+      .attr("y", 50);
+  d3.select("svg")
+    .append("g")
+    .append("text")
+      .attr("x", 80)
+      .attr("y", 62)
+      .attr("fill", "white")
+      .attr("font-size", "10px")
+      .text("FUEL TYPES:");
+  d3.select("svg")
+    .append("g")
+    .append("text")
+      .attr("x", 80)
+      .attr("y", 77)
+      .attr("fill", "lightgreen")
+      .attr("font-size", "10px")
+      .text("Electric = green");
+  d3.select("svg") 
+    .append("g")
+    .append("text")
+      .attr("x", 80)
+      .attr("y", 89)
+      .attr("fill", "lightyellow")
+      .attr("font-size", "10px")
+      .text("Gasoline = yellow");
+  d3.select("svg")
+    .append("g")
+    .append("text")
+      .attr("x", 80)
+      .attr("y", 101)
+      .attr("fill", "blue")
+      .attr("font-size", "10px")
+      .text("Diesel = blue");
   d3.select("#dataFilterDropdown")
     .selectAll("option")
     .data(make_options)
