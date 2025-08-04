@@ -7,7 +7,13 @@
 <body onload='init()'>
 <h2>2017 Automobile Fuel Efficiency</h2>
 <select id="dataFilterDropdown"></select>
-<svg width="400" height="400"></svg>
+<svg width="400" height="400">
+  <rect x="75" y="50" width="100" height="60" fill="darkgoldenrod" stroke="black"/>
+  <text x="80" y="62" fill="white" font-size="10" text-anchor="left">FUEL TYPES:</text>
+  <text x="80" y="77" fill="lightgreen" font-size="10" text-anchor="left">Electric = green</text>
+  <text x="80" y="89" fill="lightyellow" font-size="10" text-anchor="left">Gasoline = yellow</text>
+  <text x="80" y="101" fill="blue" font-size="10" text-anchor="left">Diesel = blue</text>
+</svg>
 <p>
     Here, we can focus on one car make (Chevrolet). In this dataset, Chevrolet has cars using all three fuel types.<br> 
     The Chevrolet cars follow the same general pattern and trend which we saw in the whole dataset, with gasoline usually sitting lower, diesel in the middle, and electric as a huge outlier with vastly higher efficiency.<br>
