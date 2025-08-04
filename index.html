@@ -55,7 +55,6 @@ async function init() {
                 .attr("x", cx(d.AverageCityMPG) + parseInt(d.EngineCylinders)-2)
                 .attr("y", cy(d.AverageHighwayMPG)+5)
                 .attr("font-size", "10px")
-                // .attr("text-anchor", "middle")
                 .text(d.Make + ", Cty " + d.AverageCityMPG + " / Hw " + d.AverageHighwayMPG);
             })
             .on("mouseout", function(event, d) { 
